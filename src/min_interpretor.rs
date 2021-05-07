@@ -1,11 +1,12 @@
 use std::io::BufRead;
 use std::io::Write;
 
+#[inline]
 pub fn bf<R: BufRead, W: Write>(inst: &[u8], inp: &mut R, out: &mut W) {
     let mut regs = vec![0; 16];
     let mut reg = 0;
     let mut pos = 0usize;
-    let mut loops: Vec<(usize, usize, usize)> = Vec::new();
+    let mut loops: Vec<(usize, usize)> = Vec::with_capacity(32);
     while pos < inst.len() {
         //dbg!(pos, inst[pos] as char, reg, regs[reg]);
         let mut jump = 1usize;
@@ -30,7 +31,6 @@ pub fn bf<R: BufRead, W: Write>(inst: &[u8], inp: &mut R, out: &mut W) {
             91 => {
                 if loops.len() == 0 || loops[loops.len() - 1].0 != pos {
                     let start = pos;
-                    let rg = reg;
                     let mut end = pos;
                     let mut open = 0;
                     loop {
@@ -44,7 +44,7 @@ pub fn bf<R: BufRead, W: Write>(inst: &[u8], inp: &mut R, out: &mut W) {
                         }
                         end += 1;
                     }
-                    loops.push((start, end, rg));
+                    loops.push((start, end));
                 }
                 let crt_loop = loops[loops.len() - 1];
                 if regs[reg] == 0 {
