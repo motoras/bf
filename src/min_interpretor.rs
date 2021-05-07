@@ -20,17 +20,12 @@ pub fn bf<R: BufRead, W: Write>(inst: &[u8], inp: &mut R, out: &mut W) {
                 }
             } //>
             44 => {
-                dbg!(pos, inst[pos] as char, reg, regs[reg]);
-                // let mut buf = vec![0u8; 1];
-                // inp.read_exact(&mut buf).unwrap();
-                // regs[reg] = buf[0];
                 let mut line = String::new();
                 inp.read_line(&mut line).expect("failed to read input.");
                 regs[reg] = line.trim().parse().expect("invalid input");
             } //,
             46 => {
                 write!(out, "{}", regs[reg] as u8 as char).unwrap();
-                //out.write(&[regs[reg]]).unwrap();
             } //.
             91 => {
                 if loops.len() == 0 || loops[loops.len() - 1].0 != pos {
